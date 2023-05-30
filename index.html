@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const applicationServerPublicKey =
+        "BGeod1q-HW1-s6ZRV26FjRgG3FXToe3v1oqW5p5uR-m1UMcTS9qjskA5JtstqBSORimB1AmhcpE25dY9ie5Y49o";
+
+      function subscribeUser(swRegistration) {
+        const applicationServerKey = urlB64ToUint8Array(
+          applicationServerPublicKey
+        );
+        swRegistration.pushManager
+          .subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: applicationServerKey,
+          })
+          .then((subscription) => {
+            console.log("User is subscribed");
+            console.log(JSON.stringify(subscription));
+          })
+          .catch((err) => {
+            console.log("Failed to subscribe the user: ", err);
+          });
+      }
+
+      function displayNotification() {
+        if (Notification.permission == "granted") {
+          navigator.serviceWorker.getRegistration().then((reg) => {
+            const options = {
+              icon: "./notift.jpg",
+              body: "Angular 測試工作坊 9月23日(六)",
+              image:
+                "https://scontent.ftpe7-1.fna.fbcdn.net/v/t31.0-8/21273134_10156585628499554_8520027102111869914_o.jpg?oh=9d7bcbc999c161f5ce778e361a4b9ea4&oe=5A47D9EE",
+              data: {
+                link: "https://www.facebook.com/groups/augularjs.tw/",
+                link_ok:
+                  "https://www.facebook.com/events/188912961650574/?acontext=%7B%22ref%22%3A%224%22%2C%22feed_story_type%22%3A%22370%22%2C%22action_history%22%3A%22null%22%7D",
+                link_ng: "https://www.facebook.com/groups/angularstudygroup/",
+              },
+              requireInteraction: true,
+              actions: [
+                {
+                  action: "yes",
+                  title: "參加",
+                  icon: "./notift.png",
+                },
+                {
+                  action: "no",
+                  title: "不參加",
+                  icon: "./notift.png",
+                },
+              ],
+            };
+            reg?.showNotification("Angular User Group Taiwan", options);
+            console.log("displayNotification");
+          });
+        }
+      }
+
+      if ("serviceWorker" in navigator) {
+        // 檢查browser有無支援serviceWorker
+        navigator.serviceWorker
+          .register("./worker.js")
+          .then(function (reg) {
+            subscribeUser(reg);
+            console.log("Service worker registered!");
+            // 用來更新 server worker
+            if ("Notification" in window) {
+              console.log(
+                "Notification permission default status:",
+                Notification.permission
+              );
+              Notification.requestPermission(function (status) {
+                console.log("Notification permission status:", status);
+                displayNotification();
+              });
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      }
+    </script>
+  </body>
+</html>
