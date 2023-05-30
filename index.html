@@ -11,6 +11,21 @@
       const applicationServerPublicKey =
         "BGeod1q-HW1-s6ZRV26FjRgG3FXToe3v1oqW5p5uR-m1UMcTS9qjskA5JtstqBSORimB1AmhcpE25dY9ie5Y49o";
 
+      function urlB64ToUint8Array(base64String: string | unknown[]) {
+        const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+        const base64 = (base64String + padding)
+          .replace(/\-/g, "+")
+          .replace(/_/g, "/");
+
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+          outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+      }
+
       function subscribeUser(swRegistration) {
         const applicationServerKey = urlB64ToUint8Array(
           applicationServerPublicKey
