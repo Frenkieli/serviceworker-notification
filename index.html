@@ -7,7 +7,17 @@
     <title>Document</title>
   </head>
   <body>
+    TestNotify
+    <script src="./OneSignalSDKWorker.js" defer></script>
     <script>
+      window.OneSignal = window.OneSignal || [];
+      OneSignal.push(function() {
+        OneSignal.init({
+          appId: "c16f8f75-68a3-4683-84ae-34b8f94fffdb",
+        });
+      });
+    </script>
+    <!-- <script>
       const applicationServerPublicKey =
         "BGeod1q-HW1-s6ZRV26FjRgG3FXToe3v1oqW5p5uR-m1UMcTS9qjskA5JtstqBSORimB1AmhcpE25dY9ie5Y49o";
 
@@ -102,6 +112,6 @@
             console.log(err);
           });
       }
-    </script>
+    </script> -->
   </body>
 </html>
